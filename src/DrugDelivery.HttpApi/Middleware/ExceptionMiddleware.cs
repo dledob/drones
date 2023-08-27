@@ -41,6 +41,15 @@ public class ExceptionMiddleware
                 Message = duplicationException.Message
             }.ToString());
         }
+        else if (exception is DrugDeliveryException drugDeliveryException)
+        {
+            context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+            await context.Response.WriteAsync(new ErrorDetails()
+            {
+                StatusCode = drugDeliveryException.SubStatusCode ?? context.Response.StatusCode,
+                Message = drugDeliveryException.Message
+            }.ToString());
+        }
         else
         {
             context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;

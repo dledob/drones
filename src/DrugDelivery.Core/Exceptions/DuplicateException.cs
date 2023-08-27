@@ -2,11 +2,10 @@
 
 namespace DrugDelivery.Core.Exceptions;
 
-public class DuplicateException : Exception
+public class DuplicateException : DrugDeliveryException
 {
     public DuplicateException(string message) : base(message)
     {
-
     }
 
 }
