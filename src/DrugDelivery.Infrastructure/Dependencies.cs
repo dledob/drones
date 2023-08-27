@@ -1,4 +1,5 @@
-﻿using DrugDelivery.Infrastructure.Identity;
+﻿using DrugDelivery.Infrastructure.Data;
+using DrugDelivery.Infrastructure.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -9,8 +10,8 @@ public static class Dependencies
 {
     public static void ConfigureServices(IConfiguration configuration, IServiceCollection services)
     {
-        /*services.AddDbContext<CatalogContext>(c =>
-               c.UseInMemoryDatabase("Catalog"));*/
+        services.AddDbContext<DrugDeliveryDbContext>(c =>
+               c.UseInMemoryDatabase("DrugDelivery"));
 
         services.AddDbContext<AppIdentityDbContext>(options =>
             options.UseInMemoryDatabase("Identity"));
