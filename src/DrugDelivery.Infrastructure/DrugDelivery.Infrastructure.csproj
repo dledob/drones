@@ -18,4 +18,9 @@
     <ProjectReference Include="..\DrugDelivery.Core\DrugDelivery.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Data\Config\" />
+    <Folder Include="Data\Queries\" />
+  </ItemGroup>
+
 </Project>

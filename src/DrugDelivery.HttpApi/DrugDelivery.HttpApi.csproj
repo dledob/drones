@@ -29,4 +29,8 @@
     <ProjectReference Include="..\DrugDelivery.Infrastructure\DrugDelivery.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Controllers\" />
+  </ItemGroup>
+
 </Project>
