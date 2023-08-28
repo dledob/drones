@@ -1,9 +1,10 @@
 ﻿
+using DrugDelivery.Core.Interfaces;
 using System;
 
 namespace DrugDelivery.Core.Entities
 {
-    public class Medication : BaseEntity
+    public class Medication : BaseEntity, IAggregateRoot
     {
         public string Name { get; set; }
         public string Code { get; set; }
@@ -11,7 +12,7 @@ namespace DrugDelivery.Core.Entities
         public string Image { get; set; }
 
         #pragma warning disable CS8618 // Required by Entity Framework
-        public Medication()
+        public Medication() : base()
         {
         }
         public Medication(Guid id) : base(id)

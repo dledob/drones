@@ -1,6 +1,7 @@
 ﻿
 using DrugDelivery.Core.Interfaces;
 using System;
+using System.Collections.Generic;
 
 namespace DrugDelivery.Core.Entities
 {
@@ -11,9 +12,10 @@ namespace DrugDelivery.Core.Entities
         public decimal WeightLimit { get; set; }
         public decimal BatteryCapacity { get; set; }
         public DroneState State { get; set; }
+        public ICollection<LoadedMedication>  LoadedMedications { get; set; }
 
         #pragma warning disable CS8618 // Required by Entity Framework
-        public Drone()
+        public Drone() : base()
         {
         }
         public Drone(Guid id) : base(id)
