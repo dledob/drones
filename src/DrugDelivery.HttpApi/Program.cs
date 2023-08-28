@@ -1,10 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Text;
 using DrugDelivery.Core.Constants;
 using DrugDelivery.Core.Interfaces;
 using DrugDelivery.HttpApi;
 using DrugDelivery.HttpApi.Middleware;
+using DrugDelivery.Infrastructure;
 using DrugDelivery.Infrastructure.Data;
 using DrugDelivery.Infrastructure.Identity;
 using DrugDelivery.Infrastructure.Logging;
@@ -28,7 +31,8 @@ builder.Services.AddEndpoints();
 builder.Configuration.AddConfigurationFile("appsettings.test.json");
 builder.Logging.AddConsole();
 
-DrugDelivery.Infrastructure.Dependencies.ConfigureServices(builder.Configuration, builder.Services);
+DrugDelivery.Infrastructure.Dependencies.ConfigureDatabase(builder.Configuration, builder.Services);
+DrugDelivery.Infrastructure.Dependencies.ConfigureQuartz(Assembly.GetExecutingAssembly(), builder.Services);
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
         .AddEntityFrameworkStores<AppIdentityDbContext>()
@@ -38,6 +42,7 @@ builder.Services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
 builder.Services.AddScoped(typeof(IReadRepository<>), typeof(EfRepository<>));
 builder.Services.AddScoped(typeof(IAppLogger<>), typeof(LoggerAdapter<>));
 builder.Services.AddScoped<ITokenClaimsService, IdentityTokenClaimService>();
+builder.Services.AddScoped<IAuditLog, AuditLog>();
 
 builder.Services.AddMemoryCache();
 

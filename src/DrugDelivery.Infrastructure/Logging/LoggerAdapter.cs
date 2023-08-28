@@ -1,9 +1,10 @@
 ﻿//using DrugDelivery.Core.Interfaces;
+using DrugDelivery.Core.Interfaces;
 using Microsoft.Extensions.Logging;
 
 namespace DrugDelivery.Infrastructure.Logging;
 
-public class LoggerAdapter<T> //: IAppLogger<T>
+public class LoggerAdapter<T> : IAppLogger<T>
 {
     private readonly ILogger<T> _logger;
     public LoggerAdapter(ILoggerFactory loggerFactory)
