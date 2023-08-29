@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace DrugDelivery.HttpApi.Jobs
 {
-    [CronSchedule("0/5 * * * * ?")]
+    [CronSchedule("0/30 * * * * ?")]
     public class DroneBatteryLevelJob : IJob
     {
         private readonly ILogger<DroneBatteryLevelJob> _logger;
