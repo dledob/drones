@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using AutoMapper;
+using DrugDelivery.Core.Constants;
 using DrugDelivery.Core.Entities;
 using DrugDelivery.Core.Exceptions;
 using DrugDelivery.Core.Interfaces;
 using FluentValidation;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -18,14 +20,12 @@ namespace Drugdelivery.HttpApi.DroneEndpoints;
 /// </summary>
 public class LoadingDroneEndpoint : IEndpoint<IResult, Guid, LoadingDroneRequest, IRepository<Drone>>
 {
-    private readonly IMapper _mapper;
     private readonly IRepository<Medication> _medicationRepository;
     private readonly IRepository<LoadedMedication> _loadedMedicationRepository;
     private readonly IValidator<LoadingDroneRequest> _validator;
-    public LoadingDroneEndpoint(IMapper mapper, IRepository<Medication> medicationRepository, IRepository<LoadedMedication> loadedMedicationRepository,
+    public LoadingDroneEndpoint(IRepository<Medication> medicationRepository, IRepository<LoadedMedication> loadedMedicationRepository,
         IValidator<LoadingDroneRequest> validator)
     {
-        _mapper = mapper;
         _medicationRepository = medicationRepository;
         _loadedMedicationRepository = loadedMedicationRepository;
         _validator = validator;
@@ -35,7 +35,7 @@ public class LoadingDroneEndpoint : IEndpoint<IResult, Guid, LoadingDroneRequest
     public void AddRoute(IEndpointRouteBuilder app)
     {
         app.MapPost("api/drones/{droneId}/loading",
-            //[Authorize(Roles = AuthorizationConstants.Roles.ADMINISTRATORS, AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+            [Authorize(Roles = AuthorizationConstants.Roles.ADMINISTRATORS, AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
             async (Guid droneId, LoadingDroneRequest request, IRepository<Drone> itemRepository) =>
             {
                 return await HandleAsync(droneId, request, itemRepository);

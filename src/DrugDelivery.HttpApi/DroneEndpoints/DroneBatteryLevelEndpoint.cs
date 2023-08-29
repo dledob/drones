@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
-using AutoMapper;
 using DrugDelivery.Core.Entities;
 using DrugDelivery.Core.Interfaces;
-using DrugDelivery.HttpApi.DroneEndpoints;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;

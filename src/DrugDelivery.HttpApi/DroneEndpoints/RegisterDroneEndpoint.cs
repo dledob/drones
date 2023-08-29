@@ -34,7 +34,7 @@ public class RegisterDroneEndpoint : IEndpoint<IResult, RegisterDroneRequest, IR
     public void AddRoute(IEndpointRouteBuilder app)
     {
         app.MapPost("api/drones",
-            //[Authorize(Roles = AuthorizationConstants.Roles.ADMINISTRATORS, AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+            [Authorize(Roles = AuthorizationConstants.Roles.ADMINISTRATORS, AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
             async (RegisterDroneRequest request, IRepository<Drone> itemRepository) =>
             {
                 return await HandleAsync(request, itemRepository);
