@@ -18,5 +18,16 @@ namespace DrugDelivery.Core.Entities
         public Medication(Guid id) : base(id)
         {
         }
+        public Medication(string name, string code, decimal weight, string? image = null) : base()
+        {
+            Name = name;
+            Code = code;
+            Weight = weight;
+            Image = image;
+        }
+        public Medication(Guid id, string name, string code, decimal weight, string? image = null) : this(name, code, weight, image)
+        {
+            Id = id;
+        }
     }
 }

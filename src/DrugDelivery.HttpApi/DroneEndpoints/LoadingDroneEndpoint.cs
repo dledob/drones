@@ -1,17 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using DrugDelivery.Core.Constants;
 using DrugDelivery.Core.Entities;
 using DrugDelivery.Core.Exceptions;
 using DrugDelivery.Core.Interfaces;
-using DrugDelivery.Core.Specifications;
-using DrugDelivery.HttpApi.DroneEndpoints;
 using FluentValidation;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -86,18 +80,8 @@ public class LoadingDroneEndpoint : IEndpoint<IResult, Guid, LoadingDroneRequest
         
         foreach(var item in request.Medications)
         {
-            var medication = await _medicationRepository.AddAsync(new Medication
-            {
-                Code = item.Code,
-                Name = item.Name,
-                Weight = item.Weight,
-                Image = item.Image
-            });
-            await _loadedMedicationRepository.AddAsync(new LoadedMedication
-            {
-                MedicationId = medication.Id,
-                DroneId = drone.Id
-            });
+            var medication = await _medicationRepository.AddAsync(new Medication(name: item.Name, code: item.Code, weight: item.Weight, image: item.Image));
+            await _loadedMedicationRepository.AddAsync(new LoadedMedication(droneId: drone.Id, medicationId: medication.Id));
         }
 
         drone.State = DroneState.LOADED;

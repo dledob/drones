@@ -8,7 +8,7 @@ namespace DrugDelivery.Core.Specifications
     {
         public DronesAvailableForLoadingSpecification()
         {
-            Query.Where(item => item.State == DroneState.IDLE);
+            Query.Where(item => item.State == DroneState.IDLE && item.BatteryCapacity >= 25);
         }
     }
 }

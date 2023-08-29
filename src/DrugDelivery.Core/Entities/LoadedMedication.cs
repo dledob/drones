@@ -18,5 +18,11 @@ namespace DrugDelivery.Core.Entities
         public LoadedMedication(Guid id) : base(id)
         {
         }
+
+        public LoadedMedication(Guid droneId, Guid medicationId) : base()
+        {
+            DroneId = droneId;
+            MedicationId = medicationId;
+        }
     }
 }

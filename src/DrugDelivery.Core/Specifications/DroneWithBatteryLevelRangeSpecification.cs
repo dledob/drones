@@ -1,6 +1,5 @@
 ﻿using Ardalis.Specification;
 using DrugDelivery.Core.Entities;
-using System;
 using System.Linq;
 
 namespace DrugDelivery.Core.Specifications

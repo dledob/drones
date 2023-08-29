@@ -11,6 +11,8 @@ public class DrugDeliveryDbContext : DbContext
 
     public DbSet<Drone> Drones { get; set; }
     public DbSet<Medication> Medications { get; set; }
+    public DbSet<LoadedMedication> LoadedMedications { get; set; }
+    public DbSet<Core.Entities.AuditLog> AuditLogs { get; set; }
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);

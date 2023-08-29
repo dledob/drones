@@ -21,6 +21,20 @@ namespace DrugDelivery.Core.Entities
         public Drone(Guid id) : base(id)
         {
         }
+        public Drone(string serialNumber, DroneModel model, decimal weightLimit, decimal batteryCapacity, DroneState state) : base()
+        {
+            SerialNumber = serialNumber;
+            Model = model;
+            WeightLimit = weightLimit;
+            BatteryCapacity = batteryCapacity;
+            State = state;
+        }
+
+        public Drone(Guid id, string serialNumber, DroneModel model, decimal weightLimit, decimal batteryCapacity, DroneState state)
+            : this(serialNumber, model, weightLimit, batteryCapacity, state)
+        {
+            Id = id;
+        }        
     }
 
     public enum DroneModel
