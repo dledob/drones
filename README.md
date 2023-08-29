@@ -1,4 +1,5 @@
 
+
 # Drones (Drug Delivery)
 To develop the solution we used **Clean Architecture**. Some patterns used are:
  - Specification pattern
@@ -15,6 +16,7 @@ The resources exposed through REST API are:
 7. api/drones/{droneId}/loaded-medications (GET)
 
 Only for the cases of (1) and (2) it is necessary to authenticate and obtain the **Bearer** token. The administrator user is *admin@drugdelivery.com* and the password is *Pa$W0rd*.
+The periodic task runs every 30 seconds using a custom attribute defined in *DrugDelivery.Infrastructure.Jobs.CronScheduleAttribute.cs*
 
 # Build and Run
 Open a command prompt in the solution folder and execute the following command
