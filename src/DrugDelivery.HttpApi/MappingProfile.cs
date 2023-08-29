@@ -8,7 +8,8 @@ public class MappingProfile : Profile
 {
     public MappingProfile()
     {
-        CreateMap<Drone, DroneDto>();
+        CreateMap<Drone, DroneDto>()
+            .ReverseMap();
         CreateMap<Medication, MedicationDto>()
             .ReverseMap();
     }

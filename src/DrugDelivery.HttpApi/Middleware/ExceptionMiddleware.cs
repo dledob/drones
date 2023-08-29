@@ -37,8 +37,17 @@ public class ExceptionMiddleware
             context.Response.StatusCode = (int)HttpStatusCode.Conflict;
             await context.Response.WriteAsync(new ErrorDetails()
             {
-                StatusCode = context.Response.StatusCode,
+                StatusCode = context.Response.StatusCode.ToString(),
                 Message = duplicationException.Message
+            }.ToString());
+        }
+        else if (exception is ValidateModelException modelException)
+        {
+            context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+            await context.Response.WriteAsync(new ErrorDetails()
+            {
+                StatusCode = modelException.ErrorCode ?? context.Response.StatusCode.ToString(),
+                Message = modelException.Message
             }.ToString());
         }
         else if (exception is DrugDeliveryException drugDeliveryException)
@@ -46,7 +55,7 @@ public class ExceptionMiddleware
             context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
             await context.Response.WriteAsync(new ErrorDetails()
             {
-                StatusCode = drugDeliveryException.SubStatusCode ?? context.Response.StatusCode,
+                StatusCode = drugDeliveryException.ErrorCode ?? context.Response.StatusCode.ToString(),
                 Message = drugDeliveryException.Message
             }.ToString());
         }
@@ -55,7 +64,7 @@ public class ExceptionMiddleware
             context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
             await context.Response.WriteAsync(new ErrorDetails()
             {
-                StatusCode = context.Response.StatusCode,
+                StatusCode = context.Response.StatusCode.ToString(),
                 Message = exception.Message
             }.ToString());
         }

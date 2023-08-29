@@ -9,6 +9,7 @@ using DrugDelivery.Core.Exceptions;
 using DrugDelivery.Core.Interfaces;
 using DrugDelivery.Core.Specifications;
 using DrugDelivery.HttpApi.DroneEndpoints;
+using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -26,11 +27,14 @@ public class LoadingDroneEndpoint : IEndpoint<IResult, Guid, LoadingDroneRequest
     private readonly IMapper _mapper;
     private readonly IRepository<Medication> _medicationRepository;
     private readonly IRepository<LoadedMedication> _loadedMedicationRepository;
-    public LoadingDroneEndpoint(IMapper mapper, IRepository<Medication> medicationRepository, IRepository<LoadedMedication> loadedMedicationRepository)
+    private readonly IValidator<LoadingDroneRequest> _validator;
+    public LoadingDroneEndpoint(IMapper mapper, IRepository<Medication> medicationRepository, IRepository<LoadedMedication> loadedMedicationRepository,
+        IValidator<LoadingDroneRequest> validator)
     {
         _mapper = mapper;
         _medicationRepository = medicationRepository;
         _loadedMedicationRepository = loadedMedicationRepository;
+        _validator = validator;
 
     }
 
@@ -50,24 +54,31 @@ public class LoadingDroneEndpoint : IEndpoint<IResult, Guid, LoadingDroneRequest
     {
         var response = new LoadingDroneResponse(request.CorrelationId());
 
+        var validationResult = _validator.Validate(request);
+        if (!validationResult.IsValid)
+        {
+            var firstError = validationResult.Errors.First();
+            throw new ValidateModelException(firstError.ErrorMessage, firstError.ErrorCode);
+        }
+
         var drone = await droneRepository.GetByIdAsync(droneId);
         if (drone is null)
             return Results.NotFound();
 
         if(drone.State != DroneState.IDLE)
         {
-            throw new DrugDeliveryException("Drone cannot be in 'LOADING' state", 101);
+            throw new DrugDeliveryException("Drone cannot be in 'LOADING' state", "101");
         }
 
         if (drone.BatteryCapacity < 25)
         {
-            throw new DrugDeliveryException("Drone battery level is below 25%", 102);
+            throw new DrugDeliveryException("Drone battery level is below 25%", "102");
         }
 
         var totalWeight = request.Medications.Sum(e => e.Weight);
         if (drone.WeightLimit < totalWeight)
         {
-            throw new DrugDeliveryException($"Drone weight limit is {drone.WeightLimit}", 103);
+            throw new DrugDeliveryException($"Drone weight limit is {drone.WeightLimit}", "103");
         }
 
         drone.State = DroneState.LOADING;

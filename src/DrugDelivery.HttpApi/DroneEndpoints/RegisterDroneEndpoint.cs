@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
 using AutoMapper;
 using DrugDelivery.Core.Constants;
 using DrugDelivery.Core.Entities;
@@ -6,6 +8,7 @@ using DrugDelivery.Core.Exceptions;
 using DrugDelivery.Core.Interfaces;
 using DrugDelivery.Core.Specifications;
 using DrugDelivery.HttpApi.DroneEndpoints;
+using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -21,9 +24,11 @@ namespace Drugdelivery.HttpApi.DroneEndpoints;
 public class RegisterDroneEndpoint : IEndpoint<IResult, RegisterDroneRequest, IRepository<Drone>>
 {
     private readonly IMapper _mapper;
-    public RegisterDroneEndpoint(IMapper mapper)
+    private readonly IValidator<RegisterDroneRequest> _validator;
+    public RegisterDroneEndpoint(IMapper mapper, IValidator<RegisterDroneRequest> validator)
     {
         _mapper = mapper;
+        _validator = validator;
     }
 
     public void AddRoute(IEndpointRouteBuilder app)
@@ -42,6 +47,13 @@ public class RegisterDroneEndpoint : IEndpoint<IResult, RegisterDroneRequest, IR
     {
         var response = new RegisterDroneResponse(request.CorrelationId());
 
+        var validationResult = _validator.Validate(request);
+        if (!validationResult.IsValid)
+        {
+            var firstError = validationResult.Errors.First();
+            throw new ValidateModelException(firstError.ErrorMessage, firstError.ErrorCode);
+        }
+
         var droneBySerialNumberSpecification = new DroneBySerialNumberSpecification(request.SerialNumber);
         var existingDrone = await droneRepository.CountAsync(droneBySerialNumberSpecification);
         if (existingDrone > 0)
@@ -52,7 +64,7 @@ public class RegisterDroneEndpoint : IEndpoint<IResult, RegisterDroneRequest, IR
         var newDrone = await droneRepository.AddAsync(new Drone()
         {
             SerialNumber = request.SerialNumber,
-            Model = request.Model,
+            Model = (DroneModel)Enum.Parse(typeof(DroneModel), request.Model, true),
             BatteryCapacity = request.BatteryCapacity,
             State = DroneState.IDLE,
             WeightLimit = request.WeightLimit

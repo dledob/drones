@@ -4,10 +4,10 @@ namespace DrugDelivery.Core.Exceptions;
 
 public class DrugDeliveryException : Exception
 {
-    public int? SubStatusCode { get; protected set; }
-    public DrugDeliveryException(string message, int? status = null) : base(message)
+    public string? ErrorCode { get; protected set; }
+    public DrugDeliveryException(string message, string? status = null) : base(message)
     {
-        SubStatusCode = status;
+        ErrorCode = status;
     }
 
 }

@@ -11,6 +11,7 @@ using DrugDelivery.Infrastructure;
 using DrugDelivery.Infrastructure.Data;
 using DrugDelivery.Infrastructure.Identity;
 using DrugDelivery.Infrastructure.Logging;
+using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
@@ -45,6 +46,8 @@ builder.Services.AddScoped<ITokenClaimsService, IdentityTokenClaimService>();
 builder.Services.AddScoped<IAuditLog, AuditLog>();
 
 builder.Services.AddMemoryCache();
+
+builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
 var key = Encoding.ASCII.GetBytes(AuthorizationConstants.JWT_SECRET_KEY);
 builder.Services.AddAuthentication(config =>

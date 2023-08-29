@@ -14,6 +14,9 @@ namespace DrugDelivery.Infrastructure.Data.Config
             builder.Property(d => d.Name)
                 .IsRequired();
 
+            builder.Property(d => d.Code)
+                .IsRequired();
+
         }
     }
 }
